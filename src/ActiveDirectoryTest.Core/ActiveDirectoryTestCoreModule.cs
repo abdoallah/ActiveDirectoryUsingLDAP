@@ -1,16 +1,23 @@
 ﻿using Abp.Localization;
+using Abp.Localization.Dictionaries.Xml;
+using Abp.Localization.Sources;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Runtime.Security;
 using Abp.Timing;
 using Abp.Zero;
 using Abp.Zero.Configuration;
+using Abp.Zero.Ldap.Authentication;
+using Abp.Zero.Ldap.Configuration;
 using ActiveDirectoryTest.Authorization.Roles;
 using ActiveDirectoryTest.Authorization.Users;
 using ActiveDirectoryTest.Configuration;
+using ActiveDirectoryTest.Ldap;
+using ActiveDirectoryTest.Ldap.Authentication;
 using ActiveDirectoryTest.Localization;
 using ActiveDirectoryTest.MultiTenancy;
 using ActiveDirectoryTest.Timing;
+using System.Reflection;
 
 namespace ActiveDirectoryTest
 {
@@ -25,6 +32,22 @@ namespace ActiveDirectoryTest
             Configuration.Modules.Zero().EntityTypes.Tenant = typeof(Tenant);
             Configuration.Modules.Zero().EntityTypes.Role = typeof(Role);
             Configuration.Modules.Zero().EntityTypes.User = typeof(User);
+
+            Configuration.Modules.ZeroLdap().Enable(typeof(LdapAuthenticationSource));
+
+            IocManager.Register<IAbpZeroLdapModuleConfig, AbpZeroLdapModuleConfig>();
+
+            Configuration.Localization.Sources.Extensions.Add(
+                new LocalizationSourceExtensionInfo(
+                    AbpZeroConsts.LocalizationSourceName,
+                    new XmlEmbeddedFileLocalizationDictionaryProvider(
+                        Assembly.GetExecutingAssembly(),
+                        "ActiveDirectoryTest.Core.Ldap.LocalizationSource.Source")
+                    )
+                );
+
+            Configuration.Settings.Providers.Add<LdapSettingProvider>();
+
 
             ActiveDirectoryTestLocalizationConfigurer.Configure(Configuration.Localization);
 

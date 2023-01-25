@@ -8,14 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ActiveDirectoryTest.Ldap
+namespace ActiveDirectoryTest.Ldap.Authentication
 {
-    public class LdapAuthenticationMcitSource : LdapAuthenticationSource<Tenant, User>
+    public class LdapAuthenticationSource : LdapAuthenticationSource<Tenant, User>
     {
-        public LdapAuthenticationMcitSource(ILdapSettings settings, IAbpZeroLdapModuleConfig ldapModuleConfig)
+        public LdapAuthenticationSource(ILdapSettings settings, IAbpZeroLdapModuleConfig ldapModuleConfig)
         : base(settings, ldapModuleConfig)
         {
-        }
 
+        }
+    
     }
 }
